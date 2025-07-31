@@ -1,0 +1,32 @@
+name: Check Domain Availability and Commit Result
+
+on:
+  workflow_dispatch:  # 手动触发
+
+jobs:
+  domain-checker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install python-whois requests
+
+    - name: Run domain check script
+      run: python domain_checker.py
+
+    - name: Commit and push available_domains.txt
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add available_domains.txt
+        git commit -m "Update available domain results"
+        git push
+      continue-on-error: true  # 如果没有变化，跳过 push 错误
