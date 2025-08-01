@@ -17,7 +17,7 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: pip install requests python-whois
+      run: pip install requests python-whois beautifulsoup4
 
     - name: Run github.py
       run: python github.py
