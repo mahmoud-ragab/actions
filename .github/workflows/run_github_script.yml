@@ -1,0 +1,32 @@
+name: Run github.py and Upload Result
+
+on:
+  workflow_dispatch:  # 手动触发
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies (optional)
+      run: pip install -r requirements.txt || true  # 如果你没有 requirements.txt，这行会自动跳过
+
+    - name: Run github.py script
+      run: python github.py
+
+    - name: Commit and push output file
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add -A
+        git commit -m "Auto commit: output from github.py"
+        git push
+      continue-on-error: true  # 如果没有变化，跳过错误
