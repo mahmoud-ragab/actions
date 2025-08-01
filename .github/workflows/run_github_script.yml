@@ -16,8 +16,8 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install dependencies (optional)
-      run: pip install -r requirements.txt || true
+    - name: Install dependencies
+      run: pip install requests python-whois
 
     - name: Run github.py
       run: python github.py
