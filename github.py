@@ -4,6 +4,8 @@ import time
 import re
 from bs4 import BeautifulSoup
 from queue import Queue
+import itertools
+import string
 
 lock = threading.Lock()
 
@@ -12,7 +14,8 @@ seen_schools = set()
 results = set()
 domains_only = set()
 
-initial_keywords = [
+# 之前的初始关键词
+base_keywords = [
     "university", "college", "institute", "faculty", "polytechnic", "campus", "school",
     "universidad", "universite", "hochschule", "akademia", "teknik", "technological",
     "indonesia", "philippines", "thailand", "beijing", "hong kong", "tokyo", "malaysia",
@@ -21,10 +24,20 @@ initial_keywords = [
     "primary", "secondary", "elementary", "highschool", "kindergarten", "middle school",
     "faculty", "education", "academy", "universität", "école", "escuela", "школа", "学校", "대학교",
     "università", "universidade", "skola", "skole", "lyceum", "college of", "institute of",
-    # 字母组合，避免遗漏
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
     "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
 ]
+
+# 新增：生成长度3-5的字母组合（顺序遍历）
+def generate_ordered_keywords(min_len=3, max_len=5):
+    chars = string.ascii_lowercase
+    for length in range(min_len, max_len + 1):
+        for combo in itertools.product(chars, repeat=length):
+            yield ''.join(combo)
+
+# 把生成的组合加到初始关键词里
+initial_keywords = base_keywords.copy()
+initial_keywords.extend(generate_ordered_keywords(3, 5))
 
 HEADERS = {
     "accept": "text/fragment+html",
@@ -42,7 +55,7 @@ HEADERS = {
 BASE_URL = "https://github.com/settings/education/developer_pack_applications/schools?q="
 
 q = Queue()
-num_threads = 10
+num_threads = 30
 threads = []
 
 def worker():
@@ -95,6 +108,7 @@ def search_keyword(keyword):
                             domains_only.add(domain)
                             print("[+] Found:", entry)
 
+            # 拆词继续递归关键词，不变
             words = re.split(r"[,\s\-–]", school)
             for word in words:
                 word = word.strip().lower()
