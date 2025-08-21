@@ -5,12 +5,13 @@ alumni.umons.ac.be
 apps.itg-orebro.se
 arkoekelberg.be
 bsti-mail.be
-cesapo4786@lance7.com
 cesjb.be
 ckaredingenhof.be
 colegio-rex.com
+colegiomarcote.com
 doct.ulg.ac.be
 donboscohalle.be
+ecoles-ieftlyon.net
 ecommerceinstitute.se
 efpl.be
 efty.be
@@ -29,7 +30,6 @@ isjlalouviere-ac.be
 ismh.be
 itgakersberga.se
 itgksd.se
-kvongcpanvel.com
 lbsim.org
 leerling-olve.be
 llnrvl.be
@@ -39,7 +39,7 @@ morecam.be
 myinifdkothrud.com
 oasl.sk
 psb.vib-ugent.be
-royal-schools.com
+redepassionista.com
 sec.efpl.be
 sgimpact.be
 sgr26.be
@@ -60,14 +60,12 @@ student.ulg.ac.be
 student.umons.ac.be
 student.usaintlouis.be
 student.xios.be
-suryaglobalschool.online
 thhi-tessenderlo.be
 ua.ac.be
 umons.ac.be
 usaintlouis.be
 vki.ac.be
-vtikontich.be
 vtileuven.be
+vtikontich.be
 vtsbj.hr
-westsidehs.com
 wiv-isp.be
