@@ -27,6 +27,6 @@ jobs:
         git config user.name "github-actions"
         git config user.email "actions@github.com"
         git add available_domains.txt
-        git commit -m "Update available domain results"
-        git push
-      continue-on-error: true  # 如果没有变化，跳过 push 错误
+        git commit -m "Update available domain results" || echo "No changes to commit"
+        git pull --rebase origin main || true
+        git push origin main
