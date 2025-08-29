@@ -21,6 +21,7 @@ emakoski.fi
 espoonlahdenkoulu.fi
 essat-gabes-elearning.com
 etudiant.usaintlouis.be
+gardanne.mines-se.org
 grdce.com
 gszwevegem.be
 heb.be
@@ -33,12 +34,13 @@ itgakersberga.se
 itgksd.se
 lbsim.org
 leerling-olve.be
+lhschool.net
 llnrvl.be
 mborijnland.nu
-molgen.vib-ua.be
 morecam.be
 myinifdkothrud.com
 oasl.sk
+patrioths.com
 psb.vib-ugent.be
 redepassionista.com
 royal-schools.com
@@ -65,9 +67,11 @@ student.xios.be
 suryaglobalschool.online
 thhi-tessenderlo.be
 ua.ac.be
+ubcoengineers.com
 umons.ac.be
 usaintlouis.be
-vtikontich.be
+vki.ac.be
 vtileuven.be
+vtikontich.be
 vtsbj.hr
 wiv-isp.be
