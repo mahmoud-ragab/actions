@@ -6,6 +6,12 @@ from bs4 import BeautifulSoup
 from queue import Queue
 import itertools
 import string
+import zipfile
+import io
+import csv
+
+# 🔑 新增 wordfreq 用于加载 100 万高频词
+from wordfreq import top_n_list  
 
 lock = threading.Lock()
 
@@ -14,7 +20,7 @@ seen_schools = set()
 results = set()
 domains_only = set()
 
-# 之前的初始关键词
+# 基础关键词
 base_keywords = [
     "university", "college", "institute", "faculty", "polytechnic", "campus", "school",
     "universidad", "universite", "hochschule", "akademia", "teknik", "technological",
@@ -24,20 +30,140 @@ base_keywords = [
     "primary", "secondary", "elementary", "highschool", "kindergarten", "middle school",
     "faculty", "education", "academy", "universität", "école", "escuela", "школа", "学校", "대학교",
     "università", "universidade", "skola", "skole", "lyceum", "college of", "institute of",
-    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-    "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
+    # 教育相关职位
+    "principal", "headmaster", "dean", "professor", "lecturer", "tutor", "counselor",
+    "registrar", "chancellor", "provost", "superintendent", "trustee", "faculty member",
+    "staff", "coach",
+    # 学科专业
+    "biotechnology", "data science", "artificial intelligence", "cybersecurity",
+    "renewable energy", "urban planning", "marine biology", "forensic science",
+    "speech therapy", "social work", "graphic design", "culinary arts", "veterinary science",
+    "library science",
+    # 建筑设施
+    "library", "laboratory", "auditorium", "gymnasium", "dormitory", "cafeteria",
+    "research center", "sports complex", "student center", "innovation hub", "media center",
+    # 教育阶段类型
+    "preschool", "kindergarten", "elementary school", "middle school", "junior high",
+    "senior high", "vocational school", "adult education", "special education",
+    "online courses", "continuing education", "night school",
+    # 学术活动
+    "seminar", "workshop", "conference", "exchange program", "study abroad",
+    "internship program", "scholarship program", "summer school", "online learning",
+    "distance education", "research project", "alumni association",
+    # 行政区划
+    "village", "hamlet", "neighborhood", "ward", "block", "precinct", "suburb",
+    "township", "canton", "parish",
+    # 语言文化
+    "bilingual", "trilingual", "language center", "cultural center",
+    "international school", "immersion program", "heritage school",
+    # 其他相关
+    "education reform", "curriculum development", "standards",
+    "charter school", "magnet school", "alternative school",
+    "accreditation", "qs ranking", "times higher education",
+    "online platform", "learning management system", "virtual classroom"
 ]
 
-# 新增：生成长度3-5的字母组合（顺序遍历）
-def generate_ordered_keywords(min_len=3, max_len=5):
+# 生成所有3字母组合关键词
+def generate_letter_combinations(min_len=3, max_len=3):
     chars = string.ascii_lowercase
-    for length in range(min_len, max_len + 1):
+    for length in range(min_len, max_len+1):
         for combo in itertools.product(chars, repeat=length):
             yield ''.join(combo)
 
-# 把生成的组合加到初始关键词里
-initial_keywords = base_keywords.copy()
-initial_keywords.extend(generate_ordered_keywords(3, 5))
+# GeoNames在线加载国家、省/州关键词
+def load_countries():
+    url = "https://download.geonames.org/export/dump/countryInfo.txt"
+    countries = []
+    try:
+        resp = requests.get(url, timeout=15)
+        resp.raise_for_status()
+        for line in resp.text.splitlines():
+            if line.startswith('#') or not line.strip():
+                continue
+            parts = line.split('\t')
+            if len(parts) >= 5:
+                countries.append(parts[4].lower())
+    except Exception as e:
+        print(f"[!] 加载国家失败: {e}")
+    return countries
+
+def load_admin1():
+    url = "https://download.geonames.org/export/dump/admin1CodesASCII.txt"
+    admins = []
+    try:
+        resp = requests.get(url, timeout=15)
+        resp.raise_for_status()
+        for line in resp.text.splitlines():
+            parts = line.split('\t')
+            if len(parts) >= 2:
+                admins.append(parts[1].lower())
+    except Exception as e:
+        print(f"[!] 加载省/州失败: {e}")
+    return admins
+
+def load_cities():
+    url = "https://download.geonames.org/export/dump/cities1000.zip"
+    cities = []
+    try:
+        resp = requests.get(url, timeout=30)
+        resp.raise_for_status()
+        z = zipfile.ZipFile(io.BytesIO(resp.content))
+        with z.open("cities1000.txt") as f:
+            for line in io.TextIOWrapper(f, encoding='utf-8'):
+                parts = line.split('\t')
+                if len(parts) >= 2:
+                    city = parts[1].strip().lower()
+                    if city:
+                        cities.append(city)
+    except Exception as e:
+        print(f"[!] 加载城市失败: {e}")
+    return cities
+
+def load_geo_keywords():
+    print("[*] 加载国家关键词...")
+    countries = load_countries()
+    print(f"[*] 国家数: {len(countries)}")
+    print("[*] 加载省/州关键词...")
+    admins = load_admin1()
+    print(f"[*] 省/州数: {len(admins)}")
+    print("[*] 加载城市关键词（大文件，需耐心）...")
+    cities = load_cities()
+    print(f"[*] 城市数: {len(cities)}")
+
+    all_geo = set()
+    all_geo.update(countries)
+    all_geo.update(admins)
+    all_geo.update(cities)
+    return list(all_geo)
+
+# ==========================================================
+# 这里替换关键词初始化逻辑：加载 GitHub 46 万 + wordfreq 100 万
+# ==========================================================
+def load_big_wordlist():
+    print("[*] 正在加载 GitHub 词表...")
+    url = "https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt"
+    resp = requests.get(url, timeout=30)
+    resp.raise_for_status()
+    words_github = set(resp.text.splitlines())
+
+    print("[*] 正在加载 wordfreq 高频词...")
+    words_wordfreq = set(top_n_list("en", 1000000))
+
+    merged = words_github | words_wordfreq
+    print(f"[*] GitHub + wordfreq 合并后关键词数: {len(merged)}")
+    return merged
+
+print("[*] 初始化关键词...")
+initial_keywords = set(base_keywords)
+initial_keywords.update(generate_letter_combinations(3,3))
+initial_keywords.update(load_geo_keywords())
+initial_keywords.update(load_big_wordlist())  # 🔥 加入 150 万词
+initial_keywords = list(initial_keywords)
+print(f"[*] 最终初始关键词总数: {len(initial_keywords)}")
+
+# ==========================================================
+# 以下部分保持原样（GitHub 搜索逻辑）
+# ==========================================================
 
 HEADERS = {
     "accept": "text/fragment+html",
@@ -60,65 +186,103 @@ threads = []
 
 def worker():
     while True:
-        keyword = q.get()
-        if keyword is None:
+        kw = q.get()
+        if kw is None:
             break
-        search_keyword(keyword)
+        search_keyword(kw)
         q.task_done()
-
-def save_results():
-    with lock:
-        with open("results_full.txt", "w", encoding="utf-8") as f:
-            for line in sorted(results):
-                f.write(line + "\n")
-        with open("results_domains.txt", "w", encoding="utf-8") as f:
-            for line in sorted(domains_only):
-                f.write(line + "\n")
 
 def search_keyword(keyword):
     if keyword in seen_keywords:
         return
     seen_keywords.add(keyword)
-    try:
-        print(f"[*] Searching: {keyword}")
-        url = BASE_URL + requests.utils.quote(keyword)
-        response = requests.get(url, headers=HEADERS)
-        if response.status_code != 200:
-            print(f"[!] Failed ({response.status_code}): {keyword}")
-            return
-        soup = BeautifulSoup(response.text, "html.parser")
-        items = soup.find_all("div", class_="ActionListItem typeahead-result js-school-autocomplete-result-selection")
 
-        for item in items:
-            school = item.get("data-school-name")
-            domains_raw = item.get("data-email-domains")
+    first_429 = True
+    while True:
+        try:
+            print(f"[*] 搜索关键词: {keyword}")
+            url = BASE_URL + requests.utils.quote(keyword)
+            resp = requests.get(url, headers=HEADERS, timeout=15)
 
-            if not school or school in seen_schools:
+            if resp.status_code == 429:
+                if first_429:
+                    print(f"[!] 被限流 429，关键词'{keyword}'休眠70分钟...")
+                    time.sleep(4200)
+                    first_429 = False
+                else:
+                    print(f"[!] 再次限流 429，关键词'{keyword}'休眠5分钟...")
+                    time.sleep(300)
                 continue
 
-            seen_schools.add(school)
+            if resp.status_code != 200:
+                print(f"[!] 请求失败 {resp.status_code}，关键词: {keyword}")
+                return
 
-            if domains_raw and "[]" not in domains_raw:
-                domain_matches = re.findall(r'"(.*?)"', domains_raw)
-                for domain in domain_matches:
-                    entry = f"{domain}--{school}"
-                    with lock:
-                        if entry not in results:
-                            results.add(entry)
-                            domains_only.add(domain)
-                            print("[+] Found:", entry)
+            soup = BeautifulSoup(resp.text, "html.parser")
+            items = soup.find_all("div", class_="ActionListItem typeahead-result js-school-autocomplete-result-selection")
 
-            # 拆词继续递归关键词，不变
-            words = re.split(r"[,\s\-–]", school)
-            for word in words:
-                word = word.strip().lower()
-                if word and word not in seen_keywords and 2 < len(word) < 40:
-                    q.put(word)
+            for item in items:
+                school = item.get("data-school-name")
+                domains_raw = item.get("data-email-domains")
 
-    except Exception as e:
-        print(f"[!] Error processing {keyword}: {e}")
+                if not school or school in seen_schools:
+                    continue
+
+                seen_schools.add(school)
+
+                if domains_raw and domains_raw != "[]":
+                    domains_str = domains_raw.replace("&quot;", '"').replace("false", "False").replace("true", "True")
+                    try:
+                        domains_list = eval(domains_str)
+                    except Exception as e:
+                        print(f"[!] 域名解析失败: {e}")
+                        domains_list = []
+
+                    if domains_list:
+                        for domain_info in domains_list:
+                            domain = domain_info[0]
+                            entry = f"{domain}--{school}"
+                            with lock:
+                                if entry not in results:
+                                    results.add(entry)
+                                    domains_only.add(domain)
+                                    print("[+] 发现学校:", entry)
+                                    results_file.write(entry + "\n")
+                                    domains_file.write(domain + "\n")
+                                    results_file.flush()
+                                    domains_file.flush()
+
+                    # 拆分学校名递归加入关键词队列
+                    words = re.split(r"[,\s\-–]", school)
+                    for w in words:
+                        w = w.strip().lower()
+                        if w and w not in seen_keywords and 2 < len(w) < 40:
+                            q.put(w)
+
+                else:
+                    words = re.split(r"[,\s\-–]", school)
+                    for w in words:
+                        w = w.strip().lower()
+                        if w and w not in seen_keywords and 2 < len(w) < 40:
+                            q.put(w)
+            break
+
+        except requests.exceptions.RequestException as e:
+            if first_429:
+                print(f"[!] 请求异常 {keyword}: {e}，休眠70分钟重试")
+                time.sleep(4200)
+                first_429 = False
+            else:
+                print(f"[!] 请求异常 {keyword}: {e}，休眠5分钟重试")
+                time.sleep(300)
 
 if __name__ == "__main__":
+    open("results_full.txt", "w", encoding="utf-8").close()
+    open("results_domains.txt", "w", encoding="utf-8").close()
+
+    results_file = open("results_full.txt", "a", encoding="utf-8")
+    domains_file = open("results_domains.txt", "a", encoding="utf-8")
+
     for kw in initial_keywords:
         q.put(kw)
 
@@ -131,12 +295,14 @@ if __name__ == "__main__":
     try:
         q.join()
     except KeyboardInterrupt:
-        print("[*] Interrupted!")
+        print("[*] 手动终止！")
 
     for _ in threads:
         q.put(None)
     for t in threads:
         t.join()
 
-    save_results()
-    print("[✓] Done. Results saved to results_full.txt and results_domains.txt")
+    results_file.close()
+    domains_file.close()
+
+    print("[✓] 完成。结果保存到 results_full.txt 和 results_domains.txt")
