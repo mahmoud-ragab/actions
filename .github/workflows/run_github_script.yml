@@ -1,14 +1,14 @@
-name: Run github.py and Upload to uploads/ (with timestamp and failure recovery)
+name: Run GitHub
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # 手动触发
 
 jobs:
-  run-script:
+  github:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Set up Python
@@ -17,38 +17,16 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: pip install requests python-whois beautifulsoup4
+      run: |
+        pip install -r requirements.txt || true
+        pip install requests wordfreq
 
     - name: Run github.py
-      run: python github.py
-
-    - name: Move result to uploads with timestamp
       run: |
-        mkdir -p uploads
-        timestamp=$(date +'%Y-%m-%d_%H-%M-%S')
-        if [ -f available.txt ]; then
-          mv available.txt "uploads/$timestamp.txt"
-        else
-          echo "⚠️ 没有找到 available.txt，跳过移动"
-        fi
+        python github.py
 
-    - name: Commit and push if success
-      if: success()
-      run: |
-        git config user.name "github-actions"
-        git config user.email "actions@github.com"
-        git add uploads/
-        git commit -m "✅ Output uploaded on successful run"
-        git push
-      continue-on-error: true
-
-    - name: Try to commit and push if script failed
-      if: failure()
-      run: |
-        echo "❌ 脚本执行失败，尝试上传部分结果..."
-        git config user.name "github-actions"
-        git config user.email "actions@github.com"
-        git add uploads/
-        git commit -m "⚠️ Partial output uploaded after failure"
-        git push
-      continue-on-error: true
+    - name: Upload results
+      uses: actions/upload-artifact@v3
+      with:
+        name: github-results
+        path: ./*.txt   # 上传根目录所有 txt 文件
