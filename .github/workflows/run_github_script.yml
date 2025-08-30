@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt || true
-        pip install requests wordfreq
+        pip install requests wordfreq beautifulsoup4 lxml html5lib nltk tqdm
 
     - name: Run github.py
       run: |
