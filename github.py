@@ -11,7 +11,7 @@ import io
 import csv
 
 # 🔑 新增 wordfreq 用于加载 100 万高频词
-from wordfreq import top_n_list  
+from wordfreq import top_n_list
 
 lock = threading.Lock()
 
@@ -22,45 +22,269 @@ domains_only = set()
 
 # 基础关键词
 base_keywords = [
+    # ==================== 英语核心教育词 ====================
     "university", "college", "institute", "faculty", "polytechnic", "campus", "school",
-    "universidad", "universite", "hochschule", "akademia", "teknik", "technological",
-    "indonesia", "philippines", "thailand", "beijing", "hong kong", "tokyo", "malaysia",
-    "engineering", "medical", "technology", "science", "national", "china", "japan",
-    "korea", "taiwan", "singapore", "brazil", "india", "germany", "france", "canada",
-    "primary", "secondary", "elementary", "highschool", "kindergarten", "middle school",
-    "faculty", "education", "academy", "universität", "école", "escuela", "школа", "学校", "대학교",
-    "università", "universidade", "skola", "skole", "lyceum", "college of", "institute of",
-    # 教育相关职位
-    "principal", "headmaster", "dean", "professor", "lecturer", "tutor", "counselor",
-    "registrar", "chancellor", "provost", "superintendent", "trustee", "faculty member",
-    "staff", "coach",
-    # 学科专业
-    "biotechnology", "data science", "artificial intelligence", "cybersecurity",
-    "renewable energy", "urban planning", "marine biology", "forensic science",
-    "speech therapy", "social work", "graphic design", "culinary arts", "veterinary science",
-    "library science",
-    # 建筑设施
-    "library", "laboratory", "auditorium", "gymnasium", "dormitory", "cafeteria",
-    "research center", "sports complex", "student center", "innovation hub", "media center",
-    # 教育阶段类型
-    "preschool", "kindergarten", "elementary school", "middle school", "junior high",
-    "senior high", "vocational school", "adult education", "special education",
-    "online courses", "continuing education", "night school",
-    # 学术活动
-    "seminar", "workshop", "conference", "exchange program", "study abroad",
-    "internship program", "scholarship program", "summer school", "online learning",
-    "distance education", "research project", "alumni association",
-    # 行政区划
-    "village", "hamlet", "neighborhood", "ward", "block", "precinct", "suburb",
-    "township", "canton", "parish",
-    # 语言文化
-    "bilingual", "trilingual", "language center", "cultural center",
-    "international school", "immersion program", "heritage school",
-    # 其他相关
-    "education reform", "curriculum development", "standards",
-    "charter school", "magnet school", "alternative school",
-    "accreditation", "qs ranking", "times higher education",
-    "online platform", "learning management system", "virtual classroom"
+    "academy", "education", "educational", "academic", "academics", "seminary", "conservatory",
+    "university of", "college of", "institute of", "school of", "faculty of",
+    "state university", "community college", "technical college", "liberal arts",
+    "research university", "private university", "public university",
+    
+    # ==================== 多语言"大学/学校"词汇 ====================
+    # 西班牙语
+    "universidad", "colegio", "escuela", "instituto", "facultad", "politécnico",
+    # 法语
+    "université", "universite", "école", "ecole", "lycée", "lycee", "collège", "college", "faculté",
+    # 德语
+    "universität", "universitaet", "hochschule", "fachhochschule", "schule", "akademie", "gymnasium",
+    # 意大利语
+    "università", "universita", "politecnico", "istituto", "scuola", "liceo", "accademia",
+    # 葡萄牙语
+    "universidade", "faculdade", "instituto", "escola", "colégio", "politécnica",
+    # 荷兰语
+    "universiteit", "hogeschool", "academie", "school",
+    # 波兰语
+    "uniwersytet", "politechnika", "akademia", "szkoła", "instytut",
+    # 捷克语/斯洛伐克语
+    "univerzita", "vysoká škola", "akademie",
+    # 俄语
+    "университет", "институт", "академия", "школа", "факультет", "колледж",
+    # 乌克兰语
+    "університет", "інститут", "академія",
+    # 土耳其语
+    "üniversitesi", "üniversite", "fakültesi", "okulu", "enstitüsü", "akademi",
+    # 阿拉伯语
+    "جامعة", "كلية", "معهد", "مدرسة", "أكاديمية",
+    # 波斯语
+    "دانشگاه", "دانشکده",
+    # 希伯来语
+    "אוניברסיטה", "מכללה",
+    # 印地语
+    "विश्वविद्यालय", "महाविद्यालय", "संस्थान", "विद्यालय",
+    # 孟加拉语
+    "বিশ্ববিদ্যালয়", "কলেজ",
+    # 泰语
+    "มหาวิทยาลัย", "วิทยาลัย", "สถาบัน",
+    # 越南语
+    "đại học", "trường", "học viện", "cao đẳng",
+    # 印尼语/马来语
+    "universitas", "institut", "sekolah", "politeknik", "akademi", "kolej",
+    # 菲律宾语
+    "pamantasan", "kolehiyo", "unibersidad",
+    # 日语
+    "大学", "学院", "専門学校", "高等学校", "中学校", "小学校", "学園", "学校",
+    # 韩语
+    "대학교", "대학", "학교", "학원", "전문대학", "고등학교",
+    # 中文
+    "学校", "大学", "学院", "中学", "小学", "高中", "职业学校", "师范", "理工", "科技大学",
+    # 北欧语言
+    "universitet", "högskola", "skola", "skole", "koulu", "yliopisto", "ammattikorkeakoulu",
+    # 希腊语
+    "πανεπιστήμιο", "σχολή", "ακαδημία",
+    # 罗马尼亚语
+    "universitate", "facultate", "academie", "institut", "colegiu",
+    # 匈牙利语
+    "egyetem", "főiskola", "akadémia",
+    
+    # ==================== 著名学校缩写 ====================
+    "MIT", "UCLA", "USC", "NYU", "UCSD", "UCSB", "UCI", "UCB", "UIUC", "UMICH",
+    "CMU", "Caltech", "Stanford", "Harvard", "Yale", "Princeton", "Columbia",
+    "Cornell", "Brown", "Dartmouth", "UPenn", "Duke", "Northwestern", "JHU",
+    "Georgia Tech", "Purdue", "OSU", "PSU", "UMass", "UConn", "Rutgers",
+    "HKUST", "HKU", "CUHK", "CityU", "PolyU",  # 香港
+    "NUS", "NTU", "SMU", "SUTD",  # 新加坡
+    "PKU", "THU", "Tsinghua", "Peking", "Fudan", "SJTU", "ZJU", "USTC", "NJU",  # 中国大陆
+    "NTU Taiwan", "NCTU", "NTHU", "NCU",  # 台湾
+    "UTokyo", "Kyoto", "Osaka", "Tohoku", "Nagoya", "Waseda", "Keio",  # 日本
+    "SNU", "KAIST", "POSTECH", "Yonsei", "Korea University",  # 韩国
+    "ETH", "EPFL",  # 瑞士
+    "Oxford", "Cambridge", "Imperial", "UCL", "LSE", "Edinburgh", "Manchester",  # 英国
+    "TUM", "LMU", "RWTH", "Heidelberg", "Humboldt",  # 德国
+    "Sorbonne", "ENS", "Polytechnique", "Sciences Po",  # 法国
+    "UofT", "McGill", "UBC", "Waterloo", "Alberta",  # 加拿大
+    "ANU", "Melbourne", "Sydney", "UNSW", "Monash", "Queensland",  # 澳大利亚
+    "IIT", "IISc", "AIIMS", "BITS", "NIT", "IIIT",  # 印度
+    "USP", "Unicamp", "UFRJ", "UNESP",  # 巴西
+    "UNAM", "Tecnológico de Monterrey", "Tec",  # 墨西哥
+    
+    # ==================== 教育阶段类型 ====================
+    "preschool", "pre-school", "kindergarten", "nursery", "daycare",
+    "elementary school", "primary school", "grade school",
+    "middle school", "junior high", "intermediate school",
+    "high school", "senior high", "secondary school", "preparatory",
+    "vocational school", "trade school", "technical school", "vocational training",
+    "community college", "junior college", "two-year college",
+    "graduate school", "postgraduate", "doctoral program", "PhD program",
+    "adult education", "continuing education", "lifelong learning",
+    "special education", "special needs", "inclusive education",
+    "online school", "virtual school", "cyber school", "distance learning",
+    "night school", "evening classes", "weekend school",
+    "boarding school", "day school", "residential school",
+    "charter school", "magnet school", "alternative school", "montessori",
+    "homeschool", "home education",
+    
+    # ==================== 学科专业（大幅扩充） ====================
+    # 工程类
+    "engineering", "mechanical engineering", "electrical engineering", "civil engineering",
+    "chemical engineering", "aerospace engineering", "biomedical engineering",
+    "computer engineering", "software engineering", "industrial engineering",
+    "environmental engineering", "materials engineering", "nuclear engineering",
+    # 理学类
+    "science", "physics", "chemistry", "biology", "mathematics", "statistics",
+    "astronomy", "geology", "geography", "environmental science", "earth science",
+    "marine science", "atmospheric science", "materials science",
+    # 计算机与信息
+    "computer science", "information technology", "data science", "artificial intelligence",
+    "machine learning", "cybersecurity", "information systems", "software development",
+    # 医学健康
+    "medicine", "medical", "nursing", "pharmacy", "dentistry", "veterinary",
+    "public health", "epidemiology", "biomedical", "clinical", "healthcare",
+    "physical therapy", "occupational therapy", "speech therapy", "nutrition",
+    "psychology", "psychiatry", "neuroscience",
+    # 商业管理
+    "business", "management", "MBA", "finance", "accounting", "economics",
+    "marketing", "entrepreneurship", "international business", "supply chain",
+    "human resources", "organizational behavior", "operations management",
+    # 法律政治
+    "law", "legal studies", "jurisprudence", "political science", "public policy",
+    "international relations", "public administration", "diplomacy",
+    # 人文社科
+    "arts", "humanities", "liberal arts", "philosophy", "history", "literature",
+    "linguistics", "anthropology", "sociology", "archaeology", "religious studies",
+    "theology", "divinity", "cultural studies", "gender studies", "ethnic studies",
+    # 艺术设计
+    "fine arts", "visual arts", "performing arts", "music", "dance", "theater", "theatre",
+    "film", "cinema", "photography", "graphic design", "industrial design",
+    "fashion design", "interior design", "architecture", "urban planning",
+    # 传媒新闻
+    "journalism", "media", "communication", "broadcasting", "advertising",
+    "public relations", "digital media", "multimedia",
+    # 农业环境
+    "agriculture", "agronomy", "horticulture", "forestry", "fisheries",
+    "animal science", "food science", "environmental studies", "sustainability",
+    # 其他专业
+    "education", "pedagogy", "teaching", "curriculum", "instructional design",
+    "library science", "information science", "archival studies",
+    "social work", "counseling", "criminal justice", "criminology",
+    "hospitality", "tourism", "hotel management", "culinary arts",
+    "aviation", "aeronautics", "maritime", "nautical",
+    "sports science", "kinesiology", "physical education", "athletics",
+    
+    # ==================== 地理方位词 ====================
+    "east", "west", "north", "south", "central", "eastern", "western",
+    "northern", "southern", "northeast", "northwest", "southeast", "southwest",
+    "upper", "lower", "greater", "metropolitan", "regional", "provincial",
+    
+    # ==================== 国家地区（补充） ====================
+    # 亚洲
+    "china", "japan", "korea", "taiwan", "hong kong", "macau", "singapore", "malaysia",
+    "thailand", "vietnam", "indonesia", "philippines", "india", "pakistan", "bangladesh",
+    "sri lanka", "nepal", "myanmar", "cambodia", "laos", "brunei", "mongolia",
+    "kazakhstan", "uzbekistan", "iran", "iraq", "saudi arabia", "uae", "qatar", "kuwait",
+    "israel", "turkey", "jordan", "lebanon", "oman", "bahrain", "yemen", "afghanistan",
+    # 欧洲
+    "germany", "france", "uk", "britain", "england", "scotland", "wales", "ireland",
+    "italy", "spain", "portugal", "netherlands", "belgium", "switzerland", "austria",
+    "poland", "czech", "slovakia", "hungary", "romania", "bulgaria", "greece", "croatia",
+    "serbia", "slovenia", "ukraine", "russia", "finland", "sweden", "norway", "denmark",
+    "iceland", "estonia", "latvia", "lithuania", "belarus", "moldova", "albania", "cyprus",
+    # 美洲
+    "usa", "america", "canada", "mexico", "brazil", "argentina", "chile", "colombia",
+    "peru", "venezuela", "ecuador", "bolivia", "paraguay", "uruguay", "panama", "costa rica",
+    "guatemala", "cuba", "dominican", "puerto rico", "jamaica", "haiti", "honduras",
+    # 非洲
+    "egypt", "south africa", "nigeria", "kenya", "morocco", "algeria", "tunisia", "ghana",
+    "ethiopia", "tanzania", "uganda", "rwanda", "senegal", "cameroon", "ivory coast",
+    "zimbabwe", "zambia", "botswana", "namibia", "mozambique", "angola", "sudan",
+    # 大洋洲
+    "australia", "new zealand", "fiji", "papua new guinea",
+    
+    # ==================== 主要城市（补充） ====================
+    "beijing", "shanghai", "guangzhou", "shenzhen", "hangzhou", "nanjing", "wuhan", "chengdu", "xian",
+    "tokyo", "osaka", "kyoto", "nagoya", "fukuoka", "sapporo", "yokohama", "kobe",
+    "seoul", "busan", "incheon", "daegu", "daejeon",
+    "taipei", "kaohsiung", "taichung", "tainan",
+    "new york", "los angeles", "chicago", "houston", "phoenix", "philadelphia", "san antonio",
+    "san diego", "dallas", "san jose", "austin", "boston", "seattle", "denver", "atlanta",
+    "london", "manchester", "birmingham", "liverpool", "edinburgh", "glasgow", "bristol",
+    "paris", "lyon", "marseille", "toulouse", "nice", "bordeaux", "strasbourg",
+    "berlin", "munich", "frankfurt", "hamburg", "cologne", "stuttgart", "düsseldorf",
+    "rome", "milan", "naples", "turin", "florence", "venice", "bologna",
+    "madrid", "barcelona", "valencia", "seville", "malaga", "bilbao",
+    "moscow", "st petersburg", "novosibirsk", "yekaterinburg", "kazan",
+    "mumbai", "delhi", "bangalore", "chennai", "kolkata", "hyderabad", "pune", "ahmedabad",
+    "sydney", "melbourne", "brisbane", "perth", "adelaide", "canberra",
+    "toronto", "vancouver", "montreal", "calgary", "ottawa", "edmonton",
+    "sao paulo", "rio de janeiro", "brasilia", "salvador", "fortaleza",
+    "mexico city", "guadalajara", "monterrey", "puebla", "tijuana",
+    "cairo", "johannesburg", "cape town", "lagos", "nairobi", "casablanca", "tunis",
+    "dubai", "abu dhabi", "riyadh", "jeddah", "doha", "kuwait city", "muscat",
+    "istanbul", "ankara", "izmir", "tehran", "baghdad", "tel aviv", "jerusalem",
+    "bangkok", "kuala lumpur", "jakarta", "manila", "ho chi minh", "hanoi", "yangon",
+    
+    # ==================== 教育相关职位 ====================
+    "principal", "headmaster", "headmistress", "dean", "professor", "lecturer",
+    "instructor", "tutor", "counselor", "advisor", "mentor", "teacher",
+    "registrar", "chancellor", "provost", "president", "vice president",
+    "superintendent", "trustee", "faculty member", "staff", "coach",
+    "researcher", "postdoc", "fellow", "scholar", "alumnus", "alumni",
+    
+    # ==================== 学术活动 ====================
+    "seminar", "workshop", "conference", "symposium", "colloquium", "lecture",
+    "exchange program", "study abroad", "student exchange", "international exchange",
+    "internship", "co-op", "practicum", "fieldwork", "clinical rotation",
+    "scholarship", "fellowship", "grant", "funding", "financial aid",
+    "summer school", "winter school", "intensive course", "boot camp",
+    "online learning", "e-learning", "MOOC", "distance education", "blended learning",
+    "research project", "thesis", "dissertation", "capstone",
+    "alumni association", "student union", "student government",
+    "graduation", "commencement", "convocation", "matriculation",
+    
+    # ==================== 设施建筑 ====================
+    "library", "laboratory", "lab", "auditorium", "gymnasium", "gym",
+    "dormitory", "dorm", "residence hall", "student housing",
+    "cafeteria", "dining hall", "student center", "campus center",
+    "research center", "innovation hub", "incubator", "accelerator",
+    "sports complex", "athletic center", "stadium", "arena",
+    "media center", "computer lab", "makerspace", "fab lab",
+    "observatory", "planetarium", "museum", "gallery", "theater",
+    "health center", "clinic", "counseling center", "career center",
+    
+    # ==================== 认证排名 ====================
+    "accreditation", "accredited", "certified", "recognized", "approved",
+    "AACSB", "ABET", "EQUIS", "AMBA", "WASC", "SACS", "NEASC",
+    "QS ranking", "Times Higher Education", "THE", "ARWU", "Shanghai ranking",
+    "US News", "world ranking", "national ranking", "top university",
+    
+    # ==================== 教育域名后缀关键词 ====================
+    "edu", "ac", "edu.cn", "edu.tw", "edu.hk", "edu.sg", "edu.my",
+    "edu.au", "edu.br", "edu.mx", "edu.ar", "edu.co", "edu.pe",
+    "edu.in", "edu.pk", "edu.bd", "edu.np", "edu.lk",
+    "edu.eg", "edu.za", "edu.ng", "edu.ke", "edu.gh",
+    "edu.tr", "edu.sa", "edu.ae", "edu.qa", "edu.jo",
+    "ac.uk", "ac.jp", "ac.kr", "ac.th", "ac.id", "ac.nz", "ac.za", "ac.il", "ac.ir",
+    
+    # ==================== 常见学校命名模式 ====================
+    "national university", "state university", "federal university",
+    "city university", "metropolitan university", "regional university",
+    "technical university", "technological university", "technology university",
+    "open university", "distance university", "virtual university",
+    "catholic university", "christian university", "islamic university", "buddhist university",
+    "women's university", "men's college", "military academy", "naval academy", "air force academy",
+    "teachers college", "normal university", "pedagogical university",
+    "medical university", "health sciences university", "dental school",
+    "law school", "business school", "engineering school", "art school", "music school",
+    "agricultural university", "maritime university", "aviation university",
+    
+    # ==================== 其他有用词汇 ====================
+    "affiliated", "branch campus", "satellite campus", "extension",
+    "consortium", "alliance", "network", "system", "foundation",
+    "undergraduate", "graduate", "postgraduate", "doctoral", "professional",
+    "bachelor", "master", "doctorate", "diploma", "certificate", "degree",
+    "enrollment", "admission", "application", "registration", "orientation",
+    "curriculum", "syllabus", "course", "program", "major", "minor", "concentration",
+    "credit", "GPA", "transcript", "academic record",
+    "semester", "trimester", "quarter", "academic year", "term",
+    "tuition", "fees", "scholarship", "bursary", "stipend", "loan",
 ]
 
 # 生成所有3字母组合关键词
