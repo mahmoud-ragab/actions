@@ -10,6 +10,8 @@ import zipfile
 import io
 import csv
 
+import os
+
 # 🔑 新增 wordfreq 用于加载 100 万高频词
 from wordfreq import top_n_list
 
@@ -19,6 +21,51 @@ seen_keywords = set()
 seen_schools = set()
 results = set()
 domains_only = set()
+
+# 结果文件路径（使用脚本所在目录的绝对路径）
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+RESULTS_FULL_FILE = os.path.join(SCRIPT_DIR, "results_full.txt")
+RESULTS_DOMAINS_FILE = os.path.join(SCRIPT_DIR, "results_domains.txt")
+
+def load_existing_results():
+    """加载已有结果，支持断点续传"""
+    global results, domains_only, seen_schools
+    try:
+        with open(RESULTS_FULL_FILE, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and "--" in line:
+                    results.add(line)
+                    parts = line.split("--", 1)
+                    if len(parts) == 2:
+                        domains_only.add(parts[0])
+                        seen_schools.add(parts[1])
+        print(f"[*] 已加载 {len(results)} 条历史结果")
+    except FileNotFoundError:
+        print("[*] 未找到历史结果文件，将创建新文件")
+    except Exception as e:
+        print(f"[!] 加载历史结果失败: {e}")
+
+def save_result(entry, domain):
+    """实时保存单条结果到文件"""
+    with lock:
+        if entry not in results:
+            results.add(entry)
+            domains_only.add(domain)
+            print("[+] 发现学校:", entry)
+            try:
+                with open(RESULTS_FULL_FILE, "a", encoding="utf-8") as f:
+                    f.write(entry + "\n")
+                    f.flush()
+                    os.fsync(f.fileno())  # 强制写入磁盘
+                with open(RESULTS_DOMAINS_FILE, "a", encoding="utf-8") as f:
+                    f.write(domain + "\n")
+                    f.flush()
+                    os.fsync(f.fileno())  # 强制写入磁盘
+            except Exception as e:
+                print(f"[!] 保存失败: {e}")
+            return True
+    return False
 
 # 基础关键词
 base_keywords = [
@@ -443,7 +490,8 @@ def search_keyword(keyword):
                 return
 
             soup = BeautifulSoup(resp.text, "html.parser")
-            items = soup.find_all("div", class_="ActionListItem typeahead-result js-school-autocomplete-result-selection")
+            # 使用 data-school-name 属性选择，更稳定
+            items = soup.find_all(attrs={"data-school-name": True})
 
             for item in items:
                 school = item.get("data-school-name")
@@ -466,15 +514,7 @@ def search_keyword(keyword):
                         for domain_info in domains_list:
                             domain = domain_info[0]
                             entry = f"{domain}--{school}"
-                            with lock:
-                                if entry not in results:
-                                    results.add(entry)
-                                    domains_only.add(domain)
-                                    print("[+] 发现学校:", entry)
-                                    results_file.write(entry + "\n")
-                                    domains_file.write(domain + "\n")
-                                    results_file.flush()
-                                    domains_file.flush()
+                            save_result(entry, domain)
 
                     # 拆分学校名递归加入关键词队列
                     words = re.split(r"[,\s\-–]", school)
@@ -501,11 +541,16 @@ def search_keyword(keyword):
                 time.sleep(300)
 
 if __name__ == "__main__":
-    open("results_full.txt", "w", encoding="utf-8").close()
-    open("results_domains.txt", "w", encoding="utf-8").close()
-
-    results_file = open("results_full.txt", "a", encoding="utf-8")
-    domains_file = open("results_domains.txt", "a", encoding="utf-8")
+    print(f"[*] 结果将保存到: {RESULTS_FULL_FILE}")
+    print(f"[*] 域名将保存到: {RESULTS_DOMAINS_FILE}")
+    
+    # 加载已有结果（断点续传）
+    load_existing_results()
+    
+    # 如果没有历史文件则创建
+    if not results:
+        open(RESULTS_FULL_FILE, "a", encoding="utf-8").close()
+        open(RESULTS_DOMAINS_FILE, "a", encoding="utf-8").close()
 
     for kw in initial_keywords:
         q.put(kw)
@@ -526,7 +571,5 @@ if __name__ == "__main__":
     for t in threads:
         t.join()
 
-    results_file.close()
-    domains_file.close()
-
-    print("[✓] 完成。结果保存到 results_full.txt 和 results_domains.txt")
+    print(f"[✓] 完成！共发现 {len(results)} 个学校")
+    print(f"[✓] 结果已实时保存到 {RESULTS_FULL_FILE} 和 {RESULTS_DOMAINS_FILE}")
