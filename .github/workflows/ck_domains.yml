@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
       - name: Install dependencies
         run: |
@@ -35,11 +34,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 确保文件存在再 add（防止脚本没生成导致报错）
           [ -f available_domains.txt ] && git add available_domains.txt || true
           [ -f unknown_domains.txt ] && git add unknown_domains.txt || true
 
-          # 没变化就退出
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
@@ -47,13 +44,3 @@ jobs:
 
           git commit -m "Update domain check results"
           git push
-
-      # 可选：同时给你一个可下载的 artifact（不影响提交）
-      - name: Upload results (optional)
-        uses: actions/upload-artifact@v4
-        with:
-          name: domain-results
-          path: |
-            available_domains.txt
-            unknown_domains.txt
-          if-no-files-found: warn
