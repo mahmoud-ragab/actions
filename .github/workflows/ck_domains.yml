@@ -1,32 +1,59 @@
-name: Ck Domain Availability and Commit Result
+name: Domain Availability Check
 
 on:
-  workflow_dispatch:  # 手动触发
+  workflow_dispatch:
 
 jobs:
-  domain-checker:
+  run:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
 
-    - name: Install dependencies
-      run: pip install python-whois requests
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests python-whois tldextract
 
-    - name: Run domain check script
-      run: python domain_ck.py
+      - name: Run script
+        run: |
+          python domain_ck.py
 
-    - name: Commit and push available_domains.txt
-      run: |
-        git config user.name "github-actions"
-        git config user.email "actions@github.com"
-        git add available_domains.txt
-        git commit -m "Update available domain results" || echo "No changes to commit"
-        git pull --rebase origin main || true
-        git push origin main
+      - name: Commit results back to repo
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 确保文件存在再 add（防止脚本没生成导致报错）
+          [ -f available_domains.txt ] && git add available_domains.txt || true
+          [ -f unknown_domains.txt ] && git add unknown_domains.txt || true
+
+          # 没变化就退出
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update domain check results"
+          git push
+
+      # 可选：同时给你一个可下载的 artifact（不影响提交）
+      - name: Upload results (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: domain-results
+          path: |
+            available_domains.txt
+            unknown_domains.txt
+          if-no-files-found: warn
