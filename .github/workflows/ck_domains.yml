@@ -1,14 +1,16 @@
-name: Domain Availability Check
+name: Domain Availability Check (24-way Parallel)
 
 on:
   workflow_dispatch:
 
 jobs:
-  run:
+  run_shards:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
-    permissions:
-      contents: write
+    timeout-minutes: 210
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
 
     steps:
       - name: Checkout
@@ -24,15 +26,73 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests python-whois tldextract
 
+      - name: Split domain.txt and select shard
+        run: |
+          set -e
+          split -n l/24 -d -a 2 domain.txt shard_
+          IDX=$(printf "%02d" ${{ matrix.shard }})
+          cp "shard_${IDX}" domain.txt
+          echo "Running shard $IDX"
+          wc -l domain.txt || true
+
       - name: Run script
         run: |
           python domain_ck.py
 
-      - name: Commit results back to repo
+      - name: Rename outputs
+        run: |
+          IDX=$(printf "%02d" ${{ matrix.shard }})
+          [ -f available_domains.txt ] && mv available_domains.txt "available_${IDX}.txt" || true
+          [ -f unknown_domains.txt ] && mv unknown_domains.txt "unknown_${IDX}.txt" || true
+
+      - name: Upload shard results
+        uses: actions/upload-artifact@v4
+        with:
+          name: shard-${{ matrix.shard }}
+          path: |
+            available_*.txt
+            unknown_*.txt
+          if-no-files-found: warn
+
+  merge_and_commit:
+    needs: run_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all shard artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: shards
+
+      - name: Merge results
         run: |
           set -e
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          find shards -name "available_*.txt" -type f -print0 | \
+            xargs -0 cat 2>/dev/null | \
+            sed '/^\s*$/d' | sort -u > available_domains.txt || true
+
+          find shards -name "unknown_*.txt" -type f -print0 | \
+            xargs -0 cat 2>/dev/null | \
+            sed '/^\s*$/d' | sort -u > unknown_domains.txt || true
+
+          echo "available_domains.txt lines:"
+          wc -l available_domains.txt || true
+
+          echo "unknown_domains.txt lines:"
+          wc -l unknown_domains.txt || true
+
+      - name: Commit and push results
+        run: |
+          set -e
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
 
           [ -f available_domains.txt ] && git add available_domains.txt || true
           [ -f unknown_domains.txt ] && git add unknown_domains.txt || true
@@ -42,5 +102,6 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update domain check results"
-          git push
+          git commit -m "Update domain check results (24-way parallel)"
+          git pull --rebase origin main || true
+          git push origin main
