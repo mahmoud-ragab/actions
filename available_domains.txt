@@ -53,6 +53,7 @@ ckaredingenhof.be
 ckziu.mragowo.pl
 coderfactoryacademy.edu.au
 coersm.ac.in
+colegionsgracascambara.com.br
 college-em.qc.ca
 cpistudent.vic.edu.au
 cpsboe.k12.oh.us
@@ -168,6 +169,7 @@ ismh.be
 ismu.ac.in
 ispascalcomandini.gov.it
 istitutomontani.gov.it
+istitutoromanazzi.edu.it
 istitutoromanazzi.gov.it
 istitutovanoninardo.edu.it
 itg-orebro.se
@@ -198,7 +200,6 @@ kpswjg.edu.pl
 krishnacollege.ac.in
 ktemplar.me.uk
 kv1indore.edu.in
-kvbhandup.in
 lcsd.k12.sc.us
 leerling-olve.be
 levelsacademy.edu.pk
@@ -219,12 +220,14 @@ lsm.edu.pk
 mancheopenschool.fr
 mao.edu.pk
 mbict.ac.in
+mborijnland.nu
 mcdonaldco.k12.mo.us
 mehrancolleges.edu.pk
 mesponnanicollege.ac.in
 messedaglia.gov.it
 metastem.su
 miguelcouto.com.br
+mnrcoe.edu.in
 morecam.be
 moskbt.ru
 musiekakademie.co.za
@@ -246,7 +249,6 @@ ourladyandstbede.org.uk
 pctraining.edu.za
 perspektivo.edu.pl
 piet.edu.pk
-pleasval.k12.ia.us
 pmgc.ac.nz
 polytechnicwest.wa.edu.au
 portalesamaz.com.br
@@ -288,6 +290,7 @@ smi.edu.pk
 sstu-edu.ru
 stagschools.org.uk
 starnoldschoolgodhra.edu.in
+stclairc.on.ca
 stedmunds.act.edu.au
 stenden.edu.za
 stepscollege.edu.pk
