@@ -49,7 +49,6 @@ ciaconline.com.br
 ciit-wah.edu.pk
 ciit.edu.pk
 ciitlahore.edu.pk
-ckaredingenhof.be
 ckziu.mragowo.pl
 coderfactoryacademy.edu.au
 coersm.ac.in
@@ -71,6 +70,7 @@ dbschoolofexcellence.edu.in
 dcet.edu.pk
 dcpulwama.edu.in
 depere.k12.wi.us
+deuskey.com
 devacademy.ac.nz
 dikhowmukhcollege.edu.in
 dipsar.ac.in
@@ -81,6 +81,8 @@ donboscohalle.be
 drgitr.edu.in
 ducic.ac.in
 dut4life.ac.za
+dypsoe.in
+eastholmes.k12.oh.us
 eca-jca.edu.au
 ecamoes.com.br
 ecietbu.co.in
@@ -118,9 +120,9 @@ gaylord.k12.mi.us
 gbpec.ac.in
 gbrownc.on.ca
 gcclmultan.edu.pk
-gdgoenkahisar.com
 gec-chamarajanagara.ac.in
 gecdelhi.ac.in
+gesamtschulehaan.de
 gfgcmb.ac.in
 gibbrasschaat.be
 giischinchwad.edu.in
@@ -174,7 +176,6 @@ istitutoromanazzi.gov.it
 istitutovanoninardo.edu.it
 itg-orebro.se
 itgakersberga.se
-itgksd.se
 itiscardanopv.gov.it
 itispisa.gov.it
 itisravenna.gov.it
@@ -193,6 +194,7 @@ jre.edu.in
 kamyk.warszawa.pl
 khallikotecollege.ac.in
 khbo.be
+kingsu.ab.ca
 kitetech.ac.in
 kitssingapuram.ac.in
 kprsb.ac.in
@@ -241,6 +243,7 @@ nepobjetivo.com.br
 new-haven.k12.ct.us
 nitsmirza.ac.in
 nittiportici.gov.it
+nlsd.k12.wi.us
 nwu.ac.za
 oasl.sk
 objetivoosasco.net.br
@@ -249,6 +252,7 @@ ourladyandstbede.org.uk
 pctraining.edu.za
 perspektivo.edu.pl
 piet.edu.pk
+pleasval.k12.ia.us
 pmgc.ac.nz
 polytechnicwest.wa.edu.au
 portalesamaz.com.br
@@ -290,7 +294,6 @@ smi.edu.pk
 sstu-edu.ru
 stagschools.org.uk
 starnoldschoolgodhra.edu.in
-stclairc.on.ca
 stedmunds.act.edu.au
 stenden.edu.za
 stepscollege.edu.pk
@@ -328,7 +331,6 @@ universitymaharanicollege.ac.in
 uniwest.ac.za
 unizulu.ac.za
 uoglahore.edu.pk
-uos.edu.pl
 uosgc.edu.pk
 uoslahore.edu.pk
 urkrakow.edu.pl
