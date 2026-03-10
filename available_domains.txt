@@ -54,7 +54,6 @@ ckziu.mragowo.pl
 coderfactoryacademy.edu.au
 coersm.ac.in
 colegionsgracascambara.com.br
-college-em.qc.ca
 cpistudent.vic.edu.au
 cpsboe.k12.oh.us
 cptc.ac.in
@@ -121,7 +120,6 @@ gbrownc.on.ca
 gcclmultan.edu.pk
 gec-chamarajanagara.ac.in
 gecdelhi.ac.in
-gesamtschulehaan.de
 gfgcmb.ac.in
 gibbrasschaat.be
 giischinchwad.edu.in
@@ -174,7 +172,6 @@ istitutoromanazzi.edu.it
 istitutoromanazzi.gov.it
 istitutovanoninardo.edu.it
 itg-orebro.se
-itgakersberga.se
 itgksd.se
 itiscardanopv.gov.it
 itispisa.gov.it
@@ -194,6 +191,7 @@ jre.edu.in
 kamyk.warszawa.pl
 khallikotecollege.ac.in
 khbo.be
+kingsu.ab.ca
 kitetech.ac.in
 kitssingapuram.ac.in
 kprsb.ac.in
@@ -234,7 +232,6 @@ morecam.be
 moskbt.ru
 musiekakademie.co.za
 mycput.ac.za
-mydsn.net
 myemeris.edu.za
 mynwu.ac.za
 mystudydesk.edu.au
@@ -294,6 +291,7 @@ smi.edu.pk
 sstu-edu.ru
 stagschools.org.uk
 starnoldschoolgodhra.edu.in
+stclairc.on.ca
 stedmunds.act.edu.au
 stenden.edu.za
 stepscollege.edu.pk
