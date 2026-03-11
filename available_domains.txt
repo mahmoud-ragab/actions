@@ -54,7 +54,6 @@ ckziu.mragowo.pl
 coderfactoryacademy.edu.au
 coersm.ac.in
 colegionsgracascambara.com.br
-college-em.qc.ca
 cpistudent.vic.edu.au
 cpsboe.k12.oh.us
 cptc.ac.in
@@ -85,6 +84,7 @@ eca-jca.edu.au
 ecamoes.com.br
 ecietbu.co.in
 edencollege.com.pk
+edu-collanaud.qc.ca
 efpl.be
 efty.be
 einaudimattei.edu.it
@@ -191,6 +191,7 @@ jre.edu.in
 kamyk.warszawa.pl
 khallikotecollege.ac.in
 khbo.be
+kingsu.ab.ca
 kitetech.ac.in
 kitssingapuram.ac.in
 kprsb.ac.in
@@ -231,7 +232,6 @@ morecam.be
 moskbt.ru
 musiekakademie.co.za
 mycput.ac.za
-mydsn.net
 myemeris.edu.za
 mynwu.ac.za
 mystudydesk.edu.au
@@ -291,6 +291,7 @@ smi.edu.pk
 sstu-edu.ru
 stagschools.org.uk
 starnoldschoolgodhra.edu.in
+stclairc.on.ca
 stedmunds.act.edu.au
 stenden.edu.za
 stepscollege.edu.pk
@@ -311,6 +312,7 @@ themessageschool.edu.pk
 thhi-tessenderlo.be
 thumbayhospital.ae
 tilehillwoodschool.co.uk
+tmg.edu.au
 torrimail.com.br
 traralgoncollege.vic.edu.au
 trinitycollege.ac.in
