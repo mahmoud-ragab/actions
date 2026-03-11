@@ -54,7 +54,6 @@ ckziu.mragowo.pl
 coderfactoryacademy.edu.au
 coersm.ac.in
 colegionsgracascambara.com.br
-cpistudent.vic.edu.au
 cpsboe.k12.oh.us
 cptc.ac.in
 crcmelton.vic.edu.au
@@ -70,6 +69,7 @@ dbschoolofexcellence.edu.in
 dcet.edu.pk
 dcpulwama.edu.in
 depere.k12.wi.us
+deuskey.com
 devacademy.ac.nz
 dikhowmukhcollege.edu.in
 dipsar.ac.in
@@ -265,7 +265,6 @@ raffles.edu.au
 rcconnect.edu.za
 rea-yar.ru
 realites-virtuelles.fr
-rgcer.edu.in
 risegroup.edu.in
 ritdelhi.ac.in
 rkgec.edu.in
@@ -354,7 +353,6 @@ wiv-isp.be
 wshtwp.szczecin.pl
 wzstg.edu.pl
 xmercan.edu.pl
-xunta.ga
 ycoe.ac.in
 yenimedia.edu.it
 yildirimbeyazit.edu.pl
