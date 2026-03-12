@@ -12,6 +12,7 @@ airfoundation.edu.pk
 akron.k12.oh.us
 alankar.edu.in
 alfaobjetivo.com.br
+almushir.edu.pk
 alpha.rec.br
 alunoescolassociais.org.br
 ammini.edu.in
@@ -26,6 +27,7 @@ avonmorestudent.ac.nz
 batesville.k12.in.us
 bayless.k12.mo.us
 bestgroup.edu.pk
+bhu.edu.pk
 brharnecoa.edu.in
 bsti-mail.be
 buit.ac.in
@@ -33,6 +35,7 @@ bulmim.ac.in
 butchi.com.au
 cadorescuola.gov.it
 calasanz.be
+cambridgepk.edu.pk
 campushofvanriemen.be
 cecb.g12.br
 cecmg.g12.br
@@ -43,6 +46,9 @@ ces.edu.in
 cgist.ac.in
 charter.k12.mn.us
 ciaconline.com.br
+ciit-wah.edu.pk
+ciit.edu.pk
+ciitlahore.edu.pk
 ckaredingenhof.be
 ckziu.mragowo.pl
 coderfactoryacademy.edu.au
@@ -137,6 +143,7 @@ hcc.cc.md.us
 heb.be
 hetkasteelpark.be
 hkcollege.edu.in
+hpsc.edu.pk
 ibsi.edu.pk
 icaosta-re.gov.it
 icdavincireggioemilia.gov.it
@@ -164,8 +171,6 @@ istitutomontani.gov.it
 istitutoromanazzi.edu.it
 istitutoromanazzi.gov.it
 istitutovanoninardo.edu.it
-itg-orebro.se
-itgakersberga.se
 itgksd.se
 itiscardanopv.gov.it
 itispisa.gov.it
@@ -185,7 +190,6 @@ jre.edu.in
 kamyk.warszawa.pl
 khallikotecollege.ac.in
 khbo.be
-kingsu.ab.ca
 kitetech.ac.in
 kitssingapuram.ac.in
 kprsb.ac.in
@@ -216,6 +220,7 @@ mao.edu.pk
 mbict.ac.in
 mborijnland.nu
 mcdonaldco.k12.mo.us
+mehrancolleges.edu.pk
 mesponnanicollege.ac.in
 messedaglia.gov.it
 metastem.su
@@ -225,6 +230,7 @@ morecam.be
 moskbt.ru
 musiekakademie.co.za
 mycput.ac.za
+mydsn.net
 myemeris.edu.za
 mynwu.ac.za
 mystudydesk.edu.au
@@ -241,6 +247,7 @@ orcas.k12.wa.us
 ourladyandstbede.org.uk
 pctraining.edu.za
 perspektivo.edu.pl
+piet.edu.pk
 pleasval.k12.ia.us
 pmgc.ac.nz
 polytechnicwest.wa.edu.au
@@ -267,7 +274,6 @@ s1194.ru
 sahayog.ac.in
 satyabama.ac.in
 sbps.edu.in
-sc.nsw.edu.au
 scheppersinstituut.be
 school17-gubkin.ru
 serescolacreche.com.br
@@ -280,6 +286,7 @@ sirtar.gov.in
 sjcm.be
 skmcollege.co.in
 slp.k12.la.us
+smi.edu.pk
 sstu-edu.ru
 stagschools.org.uk
 starnoldschoolgodhra.edu.in
@@ -320,6 +327,7 @@ unisanraffaele.gov.it
 universitymaharanicollege.ac.in
 uniwest.ac.za
 unizulu.ac.za
+uoglahore.edu.pk
 uos.edu.pl
 uosgc.edu.pk
 uoslahore.edu.pk
@@ -345,6 +353,7 @@ wiv-isp.be
 wshtwp.szczecin.pl
 wzstg.edu.pl
 xmercan.edu.pl
+xunta.ga
 ycoe.ac.in
 yenimedia.edu.it
 yildirimbeyazit.edu.pl
