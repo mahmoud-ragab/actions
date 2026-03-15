@@ -54,7 +54,6 @@ ckziu.mragowo.pl
 coderfactoryacademy.edu.au
 coersm.ac.in
 colegionsgracascambara.com.br
-college-em.qc.ca
 cpistudent.vic.edu.au
 cpsboe.k12.oh.us
 cptc.ac.in
@@ -81,6 +80,7 @@ donboscohalle.be
 drgitr.edu.in
 ducic.ac.in
 dut4life.ac.za
+eastholmes.k12.oh.us
 eca-jca.edu.au
 ecamoes.com.br
 ecietbu.co.in
@@ -184,7 +184,6 @@ ittvt.gov.it
 ittvt.it
 itu.edu.pl
 iuso-sne.ga
-jaihindcollege.ac.in
 jamesruse.nsw.edu.au
 jayschools.k12.in.us
 jcboe.k12.al.us
@@ -192,6 +191,7 @@ jre.edu.in
 kamyk.warszawa.pl
 khallikotecollege.ac.in
 khbo.be
+kingsu.ab.ca
 kitetech.ac.in
 kitssingapuram.ac.in
 kprsb.ac.in
@@ -221,7 +221,6 @@ mancheopenschool.fr
 mao.edu.pk
 marconi.imperia.it
 mbict.ac.in
-mborijnland.nu
 mcdonaldco.k12.mo.us
 mehrancolleges.edu.pk
 mesponnanicollege.ac.in
@@ -233,7 +232,6 @@ morecam.be
 moskbt.ru
 musiekakademie.co.za
 mycput.ac.za
-mydsn.net
 myemeris.edu.za
 mynwu.ac.za
 mystudydesk.edu.au
@@ -272,6 +270,7 @@ risegroup.edu.in
 ritdelhi.ac.in
 rkgec.edu.in
 rktalrejacollege.edu.in
+rpcollegevasai.co.in
 s1194.ru
 sahayog.ac.in
 satyabama.ac.in
